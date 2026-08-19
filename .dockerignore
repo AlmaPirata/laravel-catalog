@@ -1,0 +1,11 @@
+.git
+.env
+.phpunit.cache
+.phpunit.result.cache
+.cursor
+.codex
+.idea
+.vscode
+node_modules
+storage/logs
+vendor

@@ -1,0 +1,42 @@
+services:
+    app:
+        build: .
+        ports:
+            - "8000:8000"
+        environment:
+            APP_NAME: Catalog
+            APP_ENV: local
+            APP_KEY: base64:QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVowMTIzNDU=
+            APP_DEBUG: "true"
+            APP_URL: http://localhost:8000
+            DB_CONNECTION: mysql
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_DATABASE: catalog
+            DB_USERNAME: catalog
+            DB_PASSWORD: catalog
+            SESSION_DRIVER: file
+            CACHE_STORE: file
+            QUEUE_CONNECTION: sync
+        depends_on:
+            mysql:
+                condition: service_healthy
+
+    mysql:
+        image: mysql:8.0
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: catalog
+            MYSQL_USER: catalog
+            MYSQL_PASSWORD: catalog
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - mysql_data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
+
+volumes:
+    mysql_data:
