@@ -5,11 +5,15 @@ FROM php:8.5-cli
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git libonig-dev libsqlite3-dev unzip \
     && docker-php-ext-install mbstring pdo_mysql pdo_sqlite \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+COPY docker/php/conf.d/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 COPY composer.json composer.lock ./
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
